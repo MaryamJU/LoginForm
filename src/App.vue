@@ -1,26 +1,88 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <form class="form" @submit.prevent="submit">
+    <FormInput
+      :value="username.value"
+      :error="username.error"
+      :rules="username.rules"
+      type="text"
+      name="UserName"
+      @updateValue="update"
+    />
+    <FormInput
+      :value="password.value"
+      :error="password.error"
+      :rules="password.rules"
+      type="password"
+      name="Password"
+      @updateValue="update"
+
+    />
+    <!-- <FormPass/> -->
+    <FormButton text="Login Now" :disabled="!isValid" />
+  </form>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import FormInput from "./components/FormInput.vue";
+import FormButton from "./components/FormButton.vue";
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    FormInput,
+    FormButton,
+  },
+  data() {
+    return {
+      username: {
+        value: "n",
+        rules: {
+          required: true,
+          min: 4,
+        },
+        error: "",
+      },
+      password: {
+        value: "123",
+        rules: {
+          required: true,
+          min: 8,
+        },
+        error: "",
+      },
+    };
+  },
+  methods:{
+    update({name, value, error}){
+      this[name].error = error;
+      this[name].value = value;
+    },
+    submit(){
+      // $e.preventDefault()
+      console.log({
+        username: this.username.value,
+        password:this.password.value
+      })
+    }
+  },
+  computed: {
+    isValid() {
+      return !this.username.error && !this.password.error;
+    },
+  },
+};
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.form {
+  background: linear-gradient(80deg, #e5e5e5, lightblue);
+  padding: 2rem;
+  border-radius: 10px;
 }
 </style>
